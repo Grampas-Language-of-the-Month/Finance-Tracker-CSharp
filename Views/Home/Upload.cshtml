@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<string[]>
+@{
     ViewData["Title"] = "Upload Bank Statement";
 }
 <div class="text-center">
@@ -7,4 +8,41 @@
         This is where the user will be able to upload a CSV version of a bank statement.
         Indication will be given of upload success or failure.
     </p>
+
+    <h2>Upload Transactions</h2>
+
+    <form asp-action="Upload" method="post" enctype="multipart/form-data" class="mb-4">
+        <div class="input-group">
+            <input type="file" name="file" class="form-control" id="inputFile"/>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </div>
+    </form>
+
+    @if (Model != null && Model.Count > 0)
+    {
+        <h3>Uploaded Transactions:</h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-dark table-hover">
+                    <thead>
+                        <tr>
+                            @foreach (var header in Model.First())
+                            {
+                                <th>@header</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Skip(1))
+                        {
+                            <tr>
+                                @foreach (var cell in row)
+                               {
+                                    <td>@cell</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>      
+    }
 </div>

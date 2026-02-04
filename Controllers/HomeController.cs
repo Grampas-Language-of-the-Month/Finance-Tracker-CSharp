@@ -23,6 +23,30 @@ namespace finance_tracker.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                ModelState.AddModelError(string.Empty, "Please select a valid file.");
+                return View();
+            }
+
+            var result = new List<string[]>();
+
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            {
+                while (!reader.EndOfStream)
+                {
+                    var line = await reader.ReadLineAsync();
+                    var values = line.Split(',');
+                    result.Add(values);
+                }
+            }
+            
+            return View("Upload", result);
+        }
+
         public IActionResult Reports()
         {
             return View();
