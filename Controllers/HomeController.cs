@@ -18,14 +18,13 @@ namespace finance_tracker.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Upload()
         {
             return View();
         }
 
-        public IActionResult Test()
+        public IActionResult Reports()
         {
-            ViewData["Message"] = "Test Page.";
             return View();
         }
 
