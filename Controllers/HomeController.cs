@@ -1,6 +1,9 @@
 using System.Diagnostics;
 using finance_tracker.Models;
 using Microsoft.AspNetCore.Mvc;
+using finance_tracker.Data;
+using finance_tracker.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace finance_tracker.Controllers
 {
