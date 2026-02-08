@@ -1,9 +1,10 @@
-using System.Diagnostics;
-using finance_tracker.Models;
-using Microsoft.AspNetCore.Mvc;
 using finance_tracker.Data;
 using finance_tracker.Models;
+using finance_tracker.Models;
+using finance_tracker.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace finance_tracker.Controllers
 {
@@ -11,11 +12,13 @@ namespace finance_tracker.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly CategoryService _categoryService;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, CategoryService categoryService)
         {
             _logger = logger;
             _context = context;
+            _categoryService = categoryService;
         }
 
         public IActionResult Index()
@@ -42,15 +45,17 @@ namespace finance_tracker.Controllers
                     var line = await reader.ReadLineAsync();
                     if (string.IsNullOrWhiteSpace(line)) continue;
 
-                    var values = line.Split(',')
-                        .Select(v => v.Trim('"'))
+                    var values = line.Trim()
+                        .Split(',')
+                        .Select(v => v.Trim().Trim('"'))
                         .ToArray();
 
                     var transaction = new Transaction
                     (
                         DateTime.Parse(values[0]),
                         values[4],
-                        decimal.Parse(values[1])
+                        decimal.Parse(values[1]),
+                        _categoryService.GetCategory(values[4])
                     );
 
                     bool exists = _context.Transactions

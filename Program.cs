@@ -1,5 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using finance_tracker.Data;
+using finance_tracker.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSingleton<CategoryService>();
 
 var app = builder.Build();
 

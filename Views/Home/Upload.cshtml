@@ -20,43 +20,26 @@
         </div>
     </form>
 
-    @if (Model != null)
+    @if (Model != null && Model.Count > 0)
     {
-        @if (Model.Count > 0)
-        {
-            <div class="alert alert-success">
-                <strong>Success!</strong> Successfully added @Model.Count new transactions to the database.
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h3>Summary by Category</h3>
+                <div class="card-group">
+                    @foreach (var group in Model.GroupBy(t => t.Category))
+                    {
+                        <div class="card bg-secondary text-white m-1">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">@group.Key</h5>
+                                <p class="card-text fs-4">
+                                    @group.Sum(t => t.Amount).ToString("C")
+                                </p>
+                                <small>@group.Count() transactions</small>
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
-
-            <div class="table-responsive">
-                <table class="table table-striped table-dark table-hover">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Description</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.TransactionDate.ToString("dd MMM yyyy")</td>
-                                <td>@item.Description</td>
-                                <td class="@(item.Amount < 0 ? "text-danger" : "text-success")">
-                                    @item.Amount.ToString("C")
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        }
-        else
-        {
-            <div class="alert alert-info">
-                No new transactions were added. All items in the file already exist in the database.
-            </div>
-        }
+        </div>
     }
 </div>
