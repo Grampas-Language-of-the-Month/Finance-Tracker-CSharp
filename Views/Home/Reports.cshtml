@@ -1,13 +1,95 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-    ViewData["Title"] = "Generate Expenditure Report";
-}
+﻿@*TODO Implement range selection*@
 
-<div class="text-center">
-    <h1>@ViewData["Title"]</h1>
-    <p>This is where the user will be able to specify a time period then generate an expenditure report. 
-        The report will summarize expenses by category and provide insights into spending patterns.
-    </p>
+@model IEnumerable<dynamic>
+
+<div class="container">
+    <h2>Financial Reports</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Expenses (Out)</h3>
+            <canvas id="expenseChart"></canvas>
+        </div>
+        <div class="col-md-6">
+            <h3>Income (In)</h3>
+            <canvas id="incomeChart"></canvas>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script>
+        const data = @Html.Raw(Json.Serialize(Model));
+
+        function createChart(elementId, direction) {
+            const filteredData = data.filter(d => d.direction === direction);
+            const palette = [
+                                "#FFB300", "#803E75", "#FF6800", "#A6BDD7", "#C10020",
+                                "#CEA262", "#817066", "#007D34", "#F6768E", "#00538A",
+                                "#FF7A5C", "#53377A", "#FF8E00", "#B32851", "#F4C800",
+                                "#7F180D", "#93AA00", "#593315", "#F13A13", "#232C16"
+                            ]
+
+            const totalSum = filteredData.reduce((sum, item) => sum + item.total, 0);
+
+            // Currency formatter for US Dollars
+            const formatter = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+            });
+
+            new Chart(document.getElementById(elementId), {
+                type: 'pie',
+                data: {
+                    labels: filteredData.map(d => {
+                        const categoryName = d.label.split(': ')[1];
+                        const percentage = ((d.total / totalSum) * 100).toFixed(1);
+                        const dollarAmount = formatter.format(d.total);
+
+                        return `${categoryName} (${dollarAmount} - ${percentage}%)`;
+                    }),
+                    datasets: [{
+                        data: filteredData.map(d => d.total),
+                        backgroundColor: palette
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `${direction === 'In' ? 'Total Income' : 'Total Expenses'}: ${formatter.format(totalSum)}`,
+                            font: {
+                                size: 18,
+                                weight: 'bold'
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 30
+                            }
+                        },
+
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 15,
+                                font: { size: 12 }
+                            }
+                        },
+
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` Total: ${formatter.format(context.parsed)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        createChart('expenseChart', 'Out');
+        createChart('incomeChart', 'In');
+    </script>
+}

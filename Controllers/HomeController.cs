@@ -76,7 +76,19 @@ namespace finance_tracker.Controllers
 
         public IActionResult Reports()
         {
-            return View();
+            var transactions = _context.Transactions.ToList();
+
+            // Grouping for the charts
+            var categorySummary = transactions
+                .GroupBy(t => new { t.Direction, t.Category })
+                .Select(g => new {
+                    Label = $"{g.Key.Direction}: {g.Key.Category}",
+                    Total = Math.Abs(g.Sum(t => t.Amount)),
+                    Direction = g.Key.Direction
+                })
+                .ToList();
+
+            return View(categorySummary);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
