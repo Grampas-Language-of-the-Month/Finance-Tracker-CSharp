@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace finance_tracker.Models
 {
@@ -18,6 +17,8 @@ namespace finance_tracker.Models
 
         public decimal Amount { get; set; }
 
+        public string Category { get; set; }
+
         public void GenerateHash()
         {
             var rawData = $"{TransactionDate.ToShortDateString()}|{Description}|{Amount}";
@@ -28,11 +29,12 @@ namespace finance_tracker.Models
             }
         }
 
-        public Transaction(DateTime date, string description, decimal amount) 
+        public Transaction(DateTime date, string description, decimal amount, string category) 
         {
             TransactionDate = date;
             Description = description;
             Amount = amount;
+            Category = category;
             GenerateHash();
         }
 

@@ -1,0 +1,73 @@
+{
+  "Groceries": [
+    "market street",
+    "costco",
+    "walgreens",
+    "aafes",
+    "petco",
+    "wm supercenter",
+    "wal-mart",
+    "target.com",
+    "walmart.com"
+  ],
+  "Payments": [
+    "payment"
+  ],
+  "Gaming": [
+    "*steam"
+  ],
+  "Gas Station": [
+    "speedway"
+  ],
+  "Eating Out": [
+    "dairy queen",
+    "panda express",
+    "mcdonalds",
+    "mcdonald's",
+    "longhorn",
+    "5guys",
+    "taco bell",
+    "fizz",
+    "little caesars",
+    "roadhouse",
+    "doordash.com"
+  ],
+  "Activities": [
+    "albuquerque zoo",
+    "allianzins.usva",
+    "stubhub"
+  ],
+  "Medical": [
+    "dental",
+    "acute care"
+  ],
+  "Subscriptions": [
+    "hlu*huluplus",
+    "spotify",
+    "(botm)",
+    "nitromonthly",
+    "prime",
+    "amzn.com/billnj",
+    "hbomax.com",
+    "doo doo crew",
+    "apple.com/bill"
+  ],
+  "Amazon": [
+    "amzn.com/billwa"
+  ],
+  "Bills": [
+    "pay-hoa"
+  ],
+  "hobbies": [
+    "barnes&noble",
+    "barnes & noble",
+    "us.store.bambtx",
+    "best buy",
+    "nintendo",
+    "goodwill",
+    "michaels",
+    "etsy",
+    "lowes"
+  ]
+
+}
