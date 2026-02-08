@@ -10,10 +10,12 @@ namespace finance_tracker.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -29,25 +31,42 @@ namespace finance_tracker.Controllers
         [HttpPost]
         public async Task<IActionResult> Upload(IFormFile file)
         {
-            if (file == null || file.Length == 0)
-            {
-                ModelState.AddModelError(string.Empty, "Please select a valid file.");
-                return View();
-            }
+            if (file == null || file.Length == 0) return View(new List<Transaction>());
 
-            var result = new List<string[]>();
+            var newTransactions = new List<Transaction>();
 
             using (var reader = new StreamReader(file.OpenReadStream()))
             {
                 while (!reader.EndOfStream)
                 {
                     var line = await reader.ReadLineAsync();
-                    var values = line.Split(',');
-                    result.Add(values);
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+
+                    var values = line.Split(',')
+                        .Select(v => v.Trim('"'))
+                        .ToArray();
+
+                    var transaction = new Transaction
+                    (
+                        DateTime.Parse(values[0]),
+                        values[4],
+                        decimal.Parse(values[1])
+                    );
+
+                    bool exists = _context.Transactions
+                        .Any(t => t.Hash == transaction.Hash);
+
+                    if (!exists)
+                    {
+                        _context.Transactions.Add(transaction);
+                        newTransactions.Add(transaction);
+                    }
                 }
             }
-            
-            return View("Upload", result);
+
+            await _context.SaveChangesAsync();
+
+            return View(newTransactions);
         }
 
         public IActionResult Reports()

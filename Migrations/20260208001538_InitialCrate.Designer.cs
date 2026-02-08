@@ -12,8 +12,8 @@ using finance_tracker.Data;
 namespace finance_tracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260207233950_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260208001538_InitialCrate")]
+    partial class InitialCrate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,8 @@ namespace finance_tracker.Migrations
 
             modelBuilder.Entity("finance_tracker.Models.Transaction", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Hash")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
@@ -40,14 +37,10 @@ namespace finance_tracker.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ExternalReference")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.HasKey("Hash");
 
                     b.ToTable("Transactions");
                 });
