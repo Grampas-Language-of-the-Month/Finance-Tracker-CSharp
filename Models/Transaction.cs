@@ -19,6 +19,8 @@ namespace finance_tracker.Models
 
         public string Category { get; set; }
 
+        public string Direction { get; set; }
+
         public void GenerateHash()
         {
             var rawData = $"{TransactionDate.ToShortDateString()}|{Description}|{Amount}";
@@ -36,6 +38,15 @@ namespace finance_tracker.Models
             Amount = amount;
             Category = category;
             GenerateHash();
+
+            if (Amount < 0)
+            {
+                Direction = "Out";
+            }
+            else
+            {
+                Direction = "In";
+            }
         }
 
         protected Transaction() { }
