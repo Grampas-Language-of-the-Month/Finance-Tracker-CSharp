@@ -22,24 +22,15 @@
 
     @if (Model != null && Model.Count > 0)
     {
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <h3>Summary by Category</h3>
-                <div class="card-group">
-                    @foreach (var group in Model.GroupBy(t => t.Category))
-                    {
-                        <div class="card bg-secondary text-white m-1">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">@group.Key</h5>
-                                <p class="card-text fs-4">
-                                    @group.Sum(t => t.Amount).ToString("C")
-                                </p>
-                                <small>@group.Count() transactions</small>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
+        <div>
+            <h3>Upload Successful!</h3>
+            <p>@Model.Count transactions uploaded.</p>
+        </div>
+    } 
+    else if (Model != null && Model.Count == 0)
+    {
+        <div>
+            <h3>No new transactions were uploaded.</h3>
         </div>
     }
 </div>
